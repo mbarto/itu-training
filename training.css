@@ -1,0 +1,62 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#map {
+    position: absolute;
+    top: 100px;
+    bottom: 200px;
+    left: 100px;
+    right: 100px;
+}
+
+#map1 {
+    position: absolute;
+    top: 100px;
+    bottom: 200px;
+    left: calc(50% + 50px);
+    right: 100px;
+}
+
+#map2 {
+    position: absolute;
+    top: 100px;
+    bottom: 200px;
+    left: 100px;
+    right: calc(50% + 50px);
+}
+
+#info {
+    position: absolute;
+    bottom: 0;
+    height: 150px;
+    right: 100px;
+    left: 100px;
+}
+
+#measure {
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    right: 100px;
+    left: 100px;
+}
+
+#query-button {
+    position: absolute;
+    top: 50px;
+    left: 100px;
+    border: solid 1px black;
+    padding: 5px;
+    background: lightgray;
+    cursor: pointer;
+}
+
+#query-button.enabled {
+    background: purple;
+    color: white;
+}

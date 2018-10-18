@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ITU Training - OpenLayers</title>
+    <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.2.0/build/ol.js"></script>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.2.0/css/ol.css">
+    <script src="training.js"></script>
+    <link rel="stylesheet" href="training.css">
+</head>
+<body>
+    <div id="controls">
+        <input type="radio" name="measure" value="none" checked/> None<br/>
+        <input type="radio" name="measure" value="length"/> Length<br />
+        <input type="radio" name="measure" value="area"/> Area<br />
+    </div>
+    <div id="map"></div>
+    <div id="measure"></div>
+    <script type="text/javascript">
+        Measure();
+    </script>
+</body>
+</html>
