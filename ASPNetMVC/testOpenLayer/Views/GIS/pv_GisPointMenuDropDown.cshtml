@@ -1,0 +1,29 @@
+﻿@model IList<testOpenLayer.Business.GisPoint>
+
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" 
+            type="button" id="menu-points" data-toggle="dropdown">
+        Selected Points
+        <span class="fa fa-chevron-down"></span>
+    </button>
+    <ul class="dropdown-menu">
+        @foreach (var point in Model)
+        {
+            <li>
+                <a class="gis-point"
+                   data-lat="@point.Lat" data-long="@point.Long">
+                    <i class="fa fa-globe fa-fw"></i>
+                    @point.Lat &diams; @point.Long
+                </a>
+            </li>
+        }
+    </ul>
+</div>
+
+<script>
+    $(".gis-point").click(function () {
+        var lat = $(this).data("lat");
+        var lng = $(this).data("long");
+        drawPoint(lat, lng);
+    })
+</script>

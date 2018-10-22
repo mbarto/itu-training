@@ -1,0 +1,157 @@
+﻿@using testOpenLayer.Common
+@model testOpenLayer.Models.GisViewModel
+
+@section CustomCss {
+    <link rel="stylesheet" type="text/css" href="https://openlayers.org/en/v4.0.1/css/ol.css">
+}
+
+@section CustomScriptsTop {
+    <script src="https://openlayers.org/en/v4.0.1/build/ol.js" type="text/javascript"></script>
+    <script src="~/Content/Scripts/idwm.js" type="text/javascript"></script>
+}
+
+@section CustomScriptsBottom {
+    <script type="text/javascript">
+        var currentMap;
+        $(document).ready(function () {
+            currentMap = handleOnload('@Model.GeoServerUrl');
+            @foreach (var point in Model.Points)
+            {
+                <text>drawPointFake(@point.Lat, @point.Long);</text>
+            }
+        });
+    </script>
+
+    <script>
+        function draw() {
+
+
+            var layer = new ol.layer.Tile({
+                source: new ol.source.OSM()
+            });
+
+            var layer2 = new ol.layer.Tile({
+                source: new ol.source.OSM()
+            });
+
+            var map = new ol.Map({
+                layers: [layer, layer2],
+                target: 'currentMap',
+                view: new ol.View({
+                    center: [0, 0],
+                    zoom: 2
+                })
+            });
+
+            var pos = ol.proj.fromLonLat([16.3725, 48.208889]);
+
+            var pos2 = ol.proj.fromLonLat([14.3725, 49.208889]);
+
+            // Vienna marker
+            var marker = new ol.Overlay({
+                position: pos,
+                positioning: 'center-center',
+                element: document.getElementById('marker'),
+                stopEvent: false
+            });
+            currentMap.addOverlay(marker);
+
+            var marker2 = new ol.Overlay({
+                position: pos2,
+                positioning: 'center-center',
+                element: document.getElementById('marker2'),
+                stopEvent: false
+            });
+            currentMap.addOverlay(marker2);
+
+            // Vienna label
+            var vienna = new ol.Overlay({
+                position: pos,
+                element: document.getElementById('vienna')
+            });
+            currentMap.addOverlay(vienna);
+
+            // Popup showing the position the user clicked
+            var popup = new ol.Overlay({
+                element: document.getElementById('popup')
+            });
+            currentMap.addOverlay(popup);
+
+            currentMap.on('click', function (evt) {
+                var element = popup.getElement();
+                var coordinate = evt.coordinate;
+                var hdms = ol.coordinate.toStringHDMS(ol.proj.transform(
+                    coordinate, 'EPSG:3857', 'EPSG:4326'));
+
+                $(element).popover('destroy');
+                popup.setPosition(coordinate);
+                // the keys are quoted to prevent renaming in ADVANCED mode.
+                $(element).popover({
+                    'placement': 'top',
+                    'animation': false,
+                    'html': true,
+                    'content': '<p>The location you clicked was:</p><code>' + hdms + '</code>'
+                });
+                $(element).popover('show');
+            });
+
+
+
+        }
+
+    </script>
+    
+    <script>
+        function drawPoint(lat, long) {
+            // Create the point to draw
+            var pos1 = ol.proj.fromLonLat([lat, long]);
+
+            // Create a marker out of the point
+            var marker1 = new ol.Overlay({
+                position: pos1,
+                positioning: "center-center",
+                element: document.getElementById("marker"),
+                stopEvent: false
+            });
+            currentMap.addOverlay(marker1);
+            $("#marker").attr("title", lat + ":" + long);
+        }    
+        function drawPointFake(lat, long) {
+            $("#fake").append("<b>" + lat + ":" + long + "</b>&nbsp;&nbsp;");
+        }  
+    </script>
+}
+
+@*<div class="alert alert-info">
+        <span id="map_log">&nbsp;</span>
+    </div>*@
+
+<div class="row">
+    <div class="col-lg-12 margin-point-menu">
+        @if (Model.Points.Count > Model.Settings.MaxNumberOfPoints || 
+            HttpContext.Current.IsMobileDevice())
+        {
+            @Html.Partial("pv_GisPointMenuDropDown", Model.Points)
+        }
+        else
+        {
+            @Html.Partial("pv_GisPointMenuList", Model.Points)
+        }
+    </div>
+    <div id="fake"></div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div id="map" class="map bordered"></div>
+    </div>
+</div>
+
+<div style="display: none;">
+        <!-- Clickable label for Vienna -->
+        @*<a class="overlay" id="vienna" target="_blank" href="http://en.wikipedia.org/wiki/Vienna">Vienna</a>*@
+        <div id="marker" title="First point"></div>
+        @*<div id="marker2" title="Marker2"></div>*@
+        <!-- Popup -->
+        @*<div id="popup" title="Welcome to OpenLayers"></div>*@
+    </div>

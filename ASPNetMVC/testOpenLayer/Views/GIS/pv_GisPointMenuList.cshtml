@@ -1,0 +1,17 @@
+﻿@model IList<testOpenLayer.Business.GisPoint>
+
+@foreach (var point in Model)
+{
+    <a role="button" class="btn btn-primary gis-point"
+       data-lat="@point.Lat" data-long="@point.Long">
+         @point.Lat &diams; @point.Long
+    </a>
+}
+
+<script>
+    $(".gis-point").click(function () {
+        var lat = $(this).data("lat");
+        var lng = $(this).data("long");
+        drawPoint(lat, lng);
+    })
+</script>
